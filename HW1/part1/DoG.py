@@ -27,16 +27,14 @@ class Difference_of_Gaussian(object):
 				# - Function: cv2.subtract(second_image, first_image)
 				dog_images_per_octave.append(cv2.subtract(gaussian_images_per_octave[image_index + 1], gaussian_images_per_octave[image_index]))
 				# np.save("dog_array_{}_{}".format(octave_index, image_index), dog_images_per_octave[image_index])
-				min = np.min(dog_images_per_octave[image_index])
-				max = np.max(dog_images_per_octave[image_index])
 
 				# cv2.imwrite("./DoG_{}_{}.png".format(octave_index + 1, image_index + 1), (dog_images_per_octave[image_index] - min) / (max - min) * 255)
 
-			gaussian_images.append(gaussian_images_per_octave)	
+			gaussian_images.append(gaussian_images_per_octave)
 			dog_images.append(dog_images_per_octave)
 			image = gaussian_images_per_octave[-1]
 			image = cv2.resize(image, (image.shape[1] // 2, image.shape[0] // 2), interpolation = cv2.INTER_NEAREST)
-	
+
 		# Step 3: Thresholding the value and Find local extremum (local maximun and local minimum)
 		# Keep local extremum as a keypoint
 		keypoints = []
@@ -76,7 +74,7 @@ class Difference_of_Gaussian(object):
 										continue
 									else:
 										curr_value = dog_images_per_octave[layer + offset_layer][pixel_y + offset_y][pixel_x + offset_x]
-										# not maximum 
+										# not maximum
 										if find_maximum == False and value > curr_value:
 											is_extremum = False
 										# not minimum
@@ -86,7 +84,7 @@ class Difference_of_Gaussian(object):
 									offset_x = offset_x + 1
 								offset_y = offset_y + 1
 							offset_layer = offset_layer + 1
-						
+
 						if is_extremum:
 							keypoints.append([pixel_x * (octave_index + 1), pixel_y * (octave_index + 1)])
 
