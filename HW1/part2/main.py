@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 import argparse
 import os
-from JBF_ import Joint_bilateral_filter
+from JBF import Joint_bilateral_filter
 
 
 def main():
