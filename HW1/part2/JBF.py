@@ -14,7 +14,7 @@ class Joint_bilateral_filter(object):
 		two_times_sigma_s_squared = 2 * self.sigma_s ** 2
 		center_array = np.full((self.wndw_size, self.wndw_size, 2), self.pad_w, dtype = np.float64)
 		index_array = np.array([[(i, j) for j in range(self.wndw_size)] for i in range(self.wndw_size)])
-		spatial_kernel_table = np.prod(np.exp(-(index_array - center_array) ** 2 / (two_times_sigma_s_squared)), axis = 2)
+		spatial_kernel_table = np.exp(-np.sum(np.square(index_array - center_array), axis = 2) / (two_times_sigma_s_squared))
 
 		return spatial_kernel_table
 
@@ -46,9 +46,9 @@ class Joint_bilateral_filter(object):
 				else:
 					kernel_exp = np.sum(np.square(guidance_normalize - padded_guidance_normalize[i: i + height, j: j + width]), axis = 2)
 
-				range_kernel_table = np.exp(-kernel_exp / two_times_sigma_r_squared)
+				range_kernel_value = np.exp(-kernel_exp / two_times_sigma_r_squared)
 
-				parameter = range_kernel_table * self.spatial_kernel_table[i, j]
+				parameter = range_kernel_value * self.spatial_kernel_table[i, j]
 				parameter = np.repeat(parameter[:, :, np.newaxis], 3, axis = 2)
 
 				numerator = numerator + parameter * padded_img_normalize[i: i + height, j: j + width]
