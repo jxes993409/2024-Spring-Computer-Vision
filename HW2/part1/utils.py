@@ -52,9 +52,9 @@ def get_tiny_images(img_paths):
 		# 	crop_size = (height - width) // 2
 		# 	img = img.crop((0, crop_size, width, height - crop_size))
 		# print(img_ratio)
-		img_resize = img.resize((16, 16))
-		np_img_resize = np.array(img_resize).flatten() / 255
-		tiny_img_feats.append(np_img_resize)
+		img_resize = np.array(img.resize((16, 16)))
+		img_resize_norm = img_resize.flatten() / 255
+		tiny_img_feats.append(img_resize_norm)
 
 	#################################################################
 	#                        END OF YOUR CODE                       #
@@ -68,7 +68,7 @@ def get_tiny_images(img_paths):
 #########################################
 
 ###### Step 1-b-1
-def build_vocabulary(img_paths, vocab_size=400):
+def build_vocabulary(img_paths, vocab_size):
 	'''
 	Input : 
 		img_paths (N) : list of string of image paths (training)
@@ -78,7 +78,7 @@ def build_vocabulary(img_paths, vocab_size=400):
 	NOTE :
 		1. sift_d is 128
 		2. vocab_size is up to you, larger value will works better (to a point) 
-				but be slower to compute, you can set vocab_size in p1.py
+			 but be slower to compute, you can set vocab_size in p1.py
 	'''
 	
 	##################################################################################
@@ -111,12 +111,25 @@ def build_vocabulary(img_paths, vocab_size=400):
 	# You are welcome to use your own SIFT feature                                   #
 	##################################################################################
 
+	vocab = []
+	dsift_feats = []
+	for img_path in img_paths:
+		img = np.array(Image.open(img_path, "r"))
+		_, descriptors = dsift(img, step = [15, 15], fast = True)
+		for index in range(0, len(descriptors), 2):
+			dsift_feats.append(descriptors[index])
+		# random_indices = np.random.choice(len(descriptors), len(descriptors) // 2, replace = False)
+		# for random_index in random_indices:
+		# 	dsift_feats.append(descriptors[random_index])
+
+	vocab = kmeans(np.array(dsift_feats, dtype = np.float32), vocab_size)
+
 	##################################################################################
 	#                                END OF YOUR CODE                                #
 	##################################################################################
 	
-	# return vocab
-	return None
+	return vocab
+	# return None
 
 ###### Step 1-b-2
 def get_bags_of_sifts(img_paths, vocab):
@@ -126,8 +139,8 @@ def get_bags_of_sifts(img_paths, vocab):
 		vocab (vocab_size, sift_d) : ndarray of clusters centers of k-means
 	Output :
 		img_feats (N, d) : ndarray of feature of images, each row represent
-												a feature of an image, which is a normalized histogram
-												of vocabularies (cluster centers) on this image
+											 a feature of an image, which is a normalized histogram
+											 of vocabularies (cluster centers) on this image
 	NOTE :
 		1. d is vocab_size here
 	'''
@@ -156,6 +169,17 @@ def get_bags_of_sifts(img_paths, vocab):
 
 	img_feats = []
 
+
+	for img_path in img_paths:
+		img = np.array(Image.open(img_path, "r"))
+		_, descriptors = dsift(img, step = [3, 3], fast = True)
+		dists = cdist(descriptors, vocab, metric = 'cosine')
+		min_dists = np.argmin(dists, axis = 1)
+		hist, _ = np.histogram(min_dists, bins = len(vocab))
+		hist_norm = hist / len(descriptors)
+		
+		img_feats.append(hist_norm)
+
 	############################################################################
 	#                                END OF YOUR CODE                          #
 	############################################################################
@@ -173,14 +197,14 @@ def nearest_neighbor_classify(train_img_feats, train_labels, test_img_feats):
 	Input : 
 		train_img_feats (N, d) : ndarray of feature of training images
 		train_labels (N) : list of string of ground truth category for each 
-												training image
+											 training image
 		test_img_feats (M, d) : ndarray of feature of testing images
 	Output :
 		test_predicts (M) : list of string of predict category for each 
 												testing image
 	NOTE:
 		1. d is the dimension of the feature representation, depending on using
-				'tiny_image' or 'bag_of_sift'
+			 'tiny_image' or 'bag_of_sift'
 		2. N is the total number of training images
 		3. M is the total number of testing images
 	'''
@@ -214,19 +238,18 @@ def nearest_neighbor_classify(train_img_feats, train_labels, test_img_feats):
 	###########################################################################
 
 	test_predicts = []
+	num_k = 5
 
-	for test_img_feat in test_img_feats:
-		feat_dist = []
-		for train_img_feat, train_label in zip(train_img_feats, train_labels):
-			feat_dist.append([cdist(train_img_feat.reshape(1, -1), test_img_feat.reshape(1, -1))[0, 0], CAT2ID[train_label]])
+	dists = cdist(test_img_feats, train_img_feats, metric = 'minkowski', p = 0.3)
+	min_dists = np.argsort(dists, axis = 1)
+	min_k_dists = min_dists[:, :num_k]
 
-		dist_mins = np.argsort(np.array(feat_dist)[:, 0])
-		class_vote = np.zeros((15), dtype = np.uint)
-		for i in range(7):
-			class_vote[feat_dist[dist_mins[i]][1]] += 1
-
+	for min_k_dist in min_k_dists:
+		class_vote = np.zeros((len(CAT)), dtype = np.uint)
+		for k in min_k_dist:
+			class_vote[CAT2ID[train_labels[k]]] += 1
 		test_predicts.append(CAT[np.argmax(class_vote)])
-
+	
 	###########################################################################
 	#                               END OF YOUR CODE                          #
 	###########################################################################
