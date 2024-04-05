@@ -46,30 +46,30 @@ def main():
 
 	elif args.feature == 'bag_of_sift':
 		# vocab and features is saved to disk to avoid recomputing the vocabulary every time
-		if os.path.isfile('vocab.pkl') is False:
+		if os.path.isfile('./pkls/vocab.pkl') is False:
 			print('No existing visual word vocabulary found. Computing one from training images')
 			vocab_size = 400   # vocab_size is up to you, larger values will work better (to a point) but be slower to compute
 			vocab = build_vocabulary(train_img_paths, vocab_size)
-			with open('vocab.pkl', 'wb') as f:
+			with open('./pkls/vocab.pkl', 'wb') as f:
 				pickle.dump(vocab, f, protocol=pickle.HIGHEST_PROTOCOL)
 		else:
-			with open('vocab.pkl', 'rb') as f:
+			with open('./pkls/vocab.pkl', 'rb') as f:
 				vocab = pickle.load(f)
 		# train_image_feats
-		if os.path.isfile('train_image_feats.pkl') is False:
+		if os.path.isfile('./pkls/train_image_feats.pkl') is False:
 			train_img_feats = get_bags_of_sifts(train_img_paths, vocab)
-			with open('train_image_feats.pkl', 'wb') as f:
+			with open('./pkls/train_image_feats.pkl', 'wb') as f:
 				pickle.dump(train_img_feats, f, protocol=pickle.HIGHEST_PROTOCOL)
 		else:
-			with open('train_image_feats.pkl', 'rb') as f:
+			with open('./pkls/train_image_feats.pkl', 'rb') as f:
 				train_img_feats = pickle.load(f)
 		# test_image_feats
-		if os.path.isfile('test_image_feats.pkl') is False:
+		if os.path.isfile('./pkls/test_image_feats.pkl') is False:
 			test_img_feats  = get_bags_of_sifts(test_img_paths, vocab)
-			with open('test_image_feats.pkl', 'wb') as f:
+			with open('./pkls/test_image_feats.pkl', 'wb') as f:
 				pickle.dump(test_img_feats, f, protocol=pickle.HIGHEST_PROTOCOL)
 		else:
-			with open('test_image_feats.pkl', 'rb') as f:
+			with open('./pkls/test_image_feats.pkl', 'rb') as f:
 				test_img_feats = pickle.load(f)
 
 	else:
@@ -131,7 +131,7 @@ def plot_confusion_mtx(test_labels_ids, pred_cats, feature_type):
 	plt.tight_layout()
 	plt.ylabel('True label')
 	plt.xlabel('Predicted label')
-	plt.savefig(f'{feature_type}.png')
+	plt.savefig(f'./images/{feature_type}.png')
 
 if __name__ == '__main__':
 	main()
