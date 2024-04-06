@@ -14,6 +14,8 @@ class Difference_of_Gaussian(object):
 		gaussian_images = []
 		dog_images = []
 
+		# height: shape[0], width: shape[1]
+
 		for octave_index in range(self.num_octaves):
 			gaussian_images_per_octave = []
 			gaussian_images_per_octave.append(image)
@@ -40,10 +42,10 @@ class Difference_of_Gaussian(object):
 		keypoints = []
 
 		for octave_index, dog_images_per_octave in enumerate(dog_images):
-			for layer in range(1, self.num_DoG_images_per_octave - 1):
-				height = dog_images_per_octave[-1].shape[0]
-				width = dog_images_per_octave[-1].shape[1]
+			height = dog_images_per_octave[-1].shape[0]
+			width = dog_images_per_octave[-1].shape[1]
 
+			for layer in range(1, self.num_DoG_images_per_octave - 1):
 				# check each pixel is extremum or not
 				for pixel_y in range(1, height - 1):
 					for pixel_x in range(1, width - 1):
@@ -54,9 +56,8 @@ class Difference_of_Gaussian(object):
 						# find is maximum or not
 						if value > 0 and value > self.threshold:
 							find_maximum = True
-
 						# find is minimum or not
-						elif value < 0 and abs(value) > self.threshold:
+						elif value < 0 and -value > self.threshold:
 							find_maximum = False
 						else:
 							is_extremum = False
@@ -74,11 +75,11 @@ class Difference_of_Gaussian(object):
 										continue
 									else:
 										curr_value = dog_images_per_octave[layer + offset_layer][pixel_y + offset_y][pixel_x + offset_x]
-										# not maximum
-										if find_maximum == False and value > curr_value:
-											is_extremum = False
 										# not minimum
-										elif find_maximum == True and value < curr_value:
+										if find_maximum == False and value >= curr_value:
+											is_extremum = False
+										# not maximum
+										elif find_maximum == True and value <= curr_value:
 											is_extremum = False
 
 									offset_x = offset_x + 1
@@ -86,11 +87,11 @@ class Difference_of_Gaussian(object):
 							offset_layer = offset_layer + 1
 
 						if is_extremum:
-							keypoints.append([pixel_x * (octave_index + 1), pixel_y * (octave_index + 1)])
+							keypoints.append([pixel_y * (octave_index + 1), pixel_x * (octave_index + 1)])
 
 		# Step 4: Delete duplicate keypoints
 		# - Function: np.unique
-		keypoints = np.unique(np.array(keypoints), axis = 1)
+		keypoints = np.unique(np.array(keypoints), axis = 0)
 
 		# sort 2d-point by y, then by x
 		keypoints = keypoints[np.lexsort((keypoints[:,1],keypoints[:,0]))]
