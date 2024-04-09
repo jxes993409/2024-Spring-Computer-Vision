@@ -18,11 +18,11 @@ class MyNet(nn.Module):
 			nn.BatchNorm2d(num_features=32),
 		)
 		self.fc1 = nn.Sequential(
-			nn.Linear(in_features=1152, out_features=240),
+			nn.Linear(in_features=1152, out_features=288),
 			nn.ReLU(True),
 		)
 		self.fc2 = nn.Sequential(
-			nn.Linear(in_features=240, out_features=84),
+			nn.Linear(in_features=288, out_features=84),
 			nn.ReLU(True),
 		)
 		self.fc3 = nn.Linear(in_features=84, out_features=10)
