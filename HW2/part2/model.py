@@ -6,19 +6,19 @@ class MyNet(nn.Module):
 	def __init__(self):
 		super(MyNet, self).__init__()
 		self.conv1 = nn.Sequential(
-		  nn.Conv2d(in_channels=3, out_channels=16, kernel_size=(3, 3)),
+		  nn.Conv2d(in_channels=3, out_channels=16, kernel_size=(5, 5)),
 		  nn.ReLU(),
 		  nn.MaxPool2d(kernel_size=2, stride=2),
 			nn.BatchNorm2d(num_features=16),
 		)
 		self.conv2 = nn.Sequential(
-		  nn.Conv2d(in_channels=16, out_channels=32, kernel_size=(6, 6)),
+		  nn.Conv2d(in_channels=16, out_channels=32, kernel_size=(3, 3)),
 		  nn.ReLU(),
 		  nn.MaxPool2d(kernel_size=2, stride=2),
 			nn.BatchNorm2d(num_features=32),
 		)
 		self.fc1 = nn.Sequential(
-			nn.Linear(in_features=800, out_features=240),
+			nn.Linear(in_features=1152, out_features=240),
 			nn.ReLU(True),
 		)
 		self.fc2 = nn.Sequential(
@@ -35,8 +35,8 @@ class MyNet(nn.Module):
 		# Define the forward path of your model. #
 		##########################################
 
-		x = self.conv1(x) # batch_size, 15, 15, 16
-		x = self.conv2(x) # batch_size, 5, 5, 32
+		x = self.conv1(x) # batch_size, 14, 14, 16
+		x = self.conv2(x) # batch_size, 6, 6, 32
 		x = torch.flatten(x, start_dim=1, end_dim=-1)
 		x = self.fc1(x)
 		x = self.drop_out(x)
