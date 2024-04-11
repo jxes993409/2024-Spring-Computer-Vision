@@ -4,8 +4,8 @@
 
 ### Inference (TA will run this on public p2_data/val and private p2_data/test with both model types)
 python3 p2_inference.py --test_datadir ../hw2_data/p2_data/val --model_type resnet18 --output_path ./output/resnet18_pred.csv
-# python3 p2_inference.py --test_datadir ../hw2_data/p2_data/val --model_type mynet --output_path ./output/mynet_pred.csv
+python3 p2_inference.py --test_datadir ../hw2_data/p2_data/val --model_type mynet --output_path ./output/mynet_pred.csv
 
 ### Evaluation (TA will also run this)
 python3 p2_eval.py --csv_path ./output/resnet18_pred.csv --annos_path ../hw2_data/p2_data/val/annotations.json
-# python3 p2_eval.py --csv_path ./output/mynet_pred.csv --annos_path ../hw2_data/p2_data/val/annotations.json
+python3 p2_eval.py --csv_path ./output/mynet_pred.csv --annos_path ../hw2_data/p2_data/val/annotations.json

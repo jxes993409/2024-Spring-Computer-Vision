@@ -6,26 +6,26 @@ class MyNet(nn.Module):
 	def __init__(self):
 		super(MyNet, self).__init__()
 		self.conv1 = nn.Sequential(
-		  nn.Conv2d(in_channels=3, out_channels=16, kernel_size=(5, 5)),
+		  nn.Conv2d(in_channels=3, out_channels=15, kernel_size=(5, 5)),
 		  nn.ReLU(),
 		  nn.MaxPool2d(kernel_size=2, stride=2),
-			nn.BatchNorm2d(num_features=16),
+			nn.BatchNorm2d(num_features=15),
 		)
 		self.conv2 = nn.Sequential(
-		  nn.Conv2d(in_channels=16, out_channels=32, kernel_size=(3, 3)),
+		  nn.Conv2d(in_channels=15, out_channels=30, kernel_size=(3, 3)),
 		  nn.ReLU(),
 		  nn.MaxPool2d(kernel_size=2, stride=2),
-			nn.BatchNorm2d(num_features=32),
+			nn.BatchNorm2d(num_features=30),
 		)
 		self.fc1 = nn.Sequential(
-			nn.Linear(in_features=1152, out_features=288),
+			nn.Linear(in_features=1080, out_features=324),
 			nn.ReLU(True),
 		)
 		self.fc2 = nn.Sequential(
-			nn.Linear(in_features=288, out_features=84),
+			nn.Linear(in_features=324, out_features=81),
 			nn.ReLU(True),
 		)
-		self.fc3 = nn.Linear(in_features=84, out_features=10)
+		self.fc3 = nn.Linear(in_features=81, out_features=10)
 		self.drop_out = nn.Dropout2d(p=0.2)
 
 	def forward(self, x):
@@ -62,6 +62,7 @@ class ResNet18(nn.Module):
 		self.resnet.maxpool = Identity()
 		# (batch_size, 512)
 		self.resnet.fc = nn.Linear(self.resnet.fc.in_features, 10)
+		self.drop_out = nn.Dropout2d(p=0.15)
 		# (batch_size, 10)
 
 		#######################################################################
@@ -75,7 +76,9 @@ class ResNet18(nn.Module):
 				
 
 	def forward(self, x):
-		return self.resnet(x)
+		x = self.resnet(x)
+		x = self.drop_out(x)
+		return x
 
 class Identity(nn.Module):
 	def __init__(self):
@@ -85,6 +88,9 @@ class Identity(nn.Module):
 		return x
 
 if __name__ == '__main__':
-	model = ResNet18()
-	# model = MyNet()
-	# print(model)
+	from torchsummary import summary
+	# model = ResNet18().to('cuda')
+	model = MyNet().to('cuda')
+	# print()
+	# summary(model, (3, 32, 32))
+	print(model)
