@@ -14,10 +14,10 @@
 
 |                                                  Octave 1                                                  |                                                  Octave 2                                                  |
 |:----------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------:|
-| ![image](https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_1_1.png){:height="50%" width="50%"} | ![image](https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_2_1.png) |
-| ![image](https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_1_2.png{:height="50%" width="50%"}) | ![image](https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_2_2.png) |
-| ![image](https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_1_3.png){:height="50%" width="50%"} | ![image](https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_2_3.png) |
-| ![image](https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_1_4.png){:height="50%" width="50%"} | ![image](https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_2_4.png) |
+| <img src="https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_1_1.png" alt="DoG_1_1.png" style="width: 50%; height: 50%"/> | ![image](https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_2_1.png) |
+| <img src="https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_1_2.png" alt="DoG_1_2.png" style="width: 50%; height: 50%"/> | ![image](https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_2_2.png) |
+| <img src="https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_1_3.png" alt="DoG_1_3.png" style="width: 50%; height: 50%"/> | ![image](https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_2_3.png) |
+| <img src="https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_1_4.png" alt="DoG_1_4.png" style="width: 50%; height: 50%"/> | ![image](https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_2_4.png) |
 
 2. Find local extremum
 
