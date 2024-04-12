@@ -29,7 +29,8 @@ class Difference_of_Gaussian(object):
 				# - Function: cv2.subtract(second_image, first_image)
 				dog_images_per_octave.append(cv2.subtract(gaussian_images_per_octave[image_index + 1], gaussian_images_per_octave[image_index]))
 				# np.save("dog_array_{}_{}".format(octave_index, image_index), dog_images_per_octave[image_index])
-
+				# max = np.max(dog_images_per_octave[image_index])
+				# min = np.min(dog_images_per_octave[image_index])
 				# cv2.imwrite("./DoG_{}_{}.png".format(octave_index + 1, image_index + 1), (dog_images_per_octave[image_index] - min) / (max - min) * 255)
 
 			gaussian_images.append(gaussian_images_per_octave)
