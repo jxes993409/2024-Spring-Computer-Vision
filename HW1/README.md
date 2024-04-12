@@ -12,12 +12,12 @@
 
 1. Use Difference of Gaussian (DoG) Filter
 
-|                                                            <div style="width:195px; ">Octave 1</div>                                                            |                                 <div style="width:195px; ">Octave 2</div>                                  |
+|                                                            Octave 1                                                       |                                 Octave 2                                  |
 |:---------------------------------------------------------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------:|
-| <img src="https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_1_1.png" alt="DoG_1_1.png" style="width: 50%; height: 50%"/> | ![image](https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_2_1.png) |
-| <img src="https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_1_2.png" alt="DoG_1_2.png" style="width: 50%; height: 50%"/> | ![image](https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_2_2.png) |
-| <img src="https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_1_3.png" alt="DoG_1_3.png" style="width: 50%; height: 50%"/> | ![image](https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_2_3.png) |
-| <img src="https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_1_4.png" alt="DoG_1_4.png" style="width: 50%; height: 50%"/> | ![image](https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_2_4.png) |
+| <img src="https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_1_1.png" alt="DoG_1_1.png" style=""/> | <img src="https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_1_1.png" alt="DoG_2_1.png" style="width: 200%; height: 200%"/> |
+| <img src="https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_1_2.png" alt="DoG_1_2.png" style=""/> | <img src="https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_1_2.png" alt="DoG_2_2.png" style="width: 200%; height: 200%"/> |
+| <img src="https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_1_3.png" alt="DoG_1_3.png" style=""/> | <img src="https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_1_3.png" alt="DoG_2_3.png" style="width: 200%; height: 200%"/> |
+| <img src="https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_1_4.png" alt="DoG_1_4.png" style=""/> | <img src="https://github.com/jxes993409/2024-Spring-Computer-Vision/blob/main/HW1/part1/images/DoG_1_4.png" alt="DoG_2_4.png" style="width: 200%; height: 200%"/> |
 
 2. Find local extremum
 
