@@ -87,14 +87,30 @@ def warping(src, dst, H, ymin, ymax, xmin, xmax, direction='b'):
 
     if direction == 'b':
         # TODO: 3.apply H_inv to the destination pixels and retrieve (u,v) pixels, then reshape to (ymax-ymin),(xmax-xmin)
-
+        trans_dst = np.transpose(np.dot(H_inv, np.transpose(mesh_matrix)))
+        trans_dst /= trans_dst[:, 2].reshape(-1, 1)
+        # print(trans_dst)
         # TODO: 4.calculate the mask of the transformed coordinate (should not exceed the boundaries of source image)
+        mask = np.where((trans_dst[:, 0] < 0) | (trans_dst[:, 0] >= w_src) | (trans_dst[:, 1] < 0) | (trans_dst[:, 1] >= h_src))[0].tolist()
 
         # TODO: 5.sample the source image with the masked and reshaped transformed coordinates
+        trans_dst = np.delete(trans_dst, mask, axis=0)
+        mesh_x = np.delete(mesh_x, mask, axis=0)
+        mesh_y = np.delete(mesh_y, mask, axis=0)
 
         # TODO: 6. assign to destination image with proper masking
+        dst_x, dst_y = mesh_x, mesh_y
+        src_x, src_y = np.floor(trans_dst[:, 0]).astype(np.int), np.floor(trans_dst[:, 1]).astype(np.int)
+        dst[dst_y, dst_x] = src[src_y, src_x]
 
-        pass
+        # x1, y1 = np.floor(trans_dst[:, 0]).astype(np.int), np.floor(trans_dst[:, 1]).astype(np.int)
+        # x2, y2 = np.clip(x1 + 1, None, w_src - 1), np.clip(y1 + 1, None, h_src - 1)
+        # weight_x, weight_y = trans_dst[:, 0] - x1, trans_dst[:, 1] - y1
+
+        # dst[dst_y, dst_x] = ((1.0 - weight_x) * (1.0 - weight_y)).reshape(-1, 1) * src[y1, x1] + \
+        #                     ((weight_x) * (1.0 - weight_y)).reshape(-1, 1) * src[y1, x2] + \
+        #                     ((1.0 - weight_x) * (weight_y)).reshape(-1, 1) * src[y2, x1] + \
+        #                     ((weight_x) * (weight_y)).reshape(-1, 1) * src[y2, x2]
 
     elif direction == 'f':
         # TODO: 3.apply H to the source pixels and retrieve (u,v) pixels, then reshape to (ymax-ymin),(xmax-xmin)
@@ -106,6 +122,8 @@ def warping(src, dst, H, ymin, ymax, xmin, xmax, direction='b'):
 
         # TODO: 5.filter the valid coordinates using previous obtained mask
         trans_src = np.delete(trans_src, mask, axis=0)
+        mesh_x = np.delete(mesh_x, mask, axis=0)
+        mesh_y = np.delete(mesh_y, mask, axis=0)
 
         # TODO: 6. assign to destination image using advanced array indicing
         dst_x, dst_y = np.floor(trans_src[:, 0]).astype(np.int), np.floor(trans_src[:, 1]).astype(np.int)

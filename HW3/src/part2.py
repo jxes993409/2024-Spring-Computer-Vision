@@ -26,16 +26,23 @@ def planarAR(REF_IMAGE_PATH, VIDEO_PATH):
     pbar = tqdm(total = 353)
     while (video.isOpened()):
         ret, frame = video.read()
-        if ret:  ## check whethere the frame is legal, i.e., there still exists a frame
+        if ret:  ## check whether the frame is legal, i.e., there still exists a frame
+            import sys
             # TODO: 1.find corners with aruco
             # function call to aruco.detectMarkers()
-
+            corners, ids, _ = aruco.detectMarkers(frame, arucoDict, parameters=arucoParameters)
             # TODO: 2.find homograpy
             # function call to solve_homography()
-
+            # print(np.array(corners).reshape(4, 2))
+            if len(ids) > 1:
+                corners = corners[0]
+            corners = np.array(corners).reshape(4, 2).astype(np.int)
+            ymin, ymax, xmin, xmax = np.min(corners[:, 1]), np.max(corners[:, 1]), np.min(corners[:, 0]), np.max(corners[:, 0])
+            # print(ymin, ymax, xmin, xmax)
+            H = solve_homography(ref_corns, corners)
             # TODO: 3.apply backward warp
             # function call to warping()
-
+            frame = warping(ref_image, frame, H, ymin, ymax, xmin, xmax, direction='b')
             videowriter.write(frame)
             pbar.update(1)
 
