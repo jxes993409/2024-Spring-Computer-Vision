@@ -33,7 +33,6 @@ def planarAR(REF_IMAGE_PATH, VIDEO_PATH):
             corners, ids, _ = aruco.detectMarkers(frame, arucoDict, parameters=arucoParameters)
             # TODO: 2.find homograpy
             # function call to solve_homography()
-            # print(np.array(corners).reshape(4, 2))
             if len(ids) > 1:
                 corners = corners[0]
             corners = np.array(corners).reshape(4, 2).astype(np.int)

@@ -19,15 +19,34 @@ def solve_homography(u, v):
         print('At least 4 points should be given')
 
     # TODO: 1.forming A
-    A = np.array([
-         [u[0][0], u[0][1], 1, 0, 0, 0, -(u[0][0] * v[0][0]), -(u[0][1] * v[0][0]), -v[0][0]],
-         [u[1][0], u[1][1], 1, 0, 0, 0, -(u[1][0] * v[1][0]), -(u[1][1] * v[1][0]), -v[1][0]],
-         [u[2][0], u[2][1], 1, 0, 0, 0, -(u[2][0] * v[2][0]), -(u[2][1] * v[2][0]), -v[2][0]],
-         [u[3][0], u[3][1], 1, 0, 0, 0, -(u[3][0] * v[3][0]), -(u[3][1] * v[3][0]), -v[3][0]],
-         [0, 0, 0, u[0][0], u[0][1], 1, -(u[0][0] * v[0][1]), -(u[0][1] * v[0][1]), -v[0][1]],
-         [0, 0, 0, u[1][0], u[1][1], 1, -(u[1][0] * v[1][1]), -(u[1][1] * v[1][1]), -v[1][1]],
-         [0, 0, 0, u[2][0], u[2][1], 1, -(u[2][0] * v[2][1]), -(u[2][1] * v[2][1]), -v[2][1]],
-         [0, 0, 0, u[3][0], u[3][1], 1, -(u[3][0] * v[3][1]), -(u[3][1] * v[3][1]), -v[3][1]]])
+
+    # [u[0], u[1], [1], [0, 0, 0], -(u[0] * v[0]), -(u[1] * v[0]), -v[0]]
+    upper_half = np.concatenate((
+        u,                                      # [u[0], u[1]]   
+        np.ones((N, 1), dtype=np.int),          # [0, 0, 0]
+        np.zeros((N, 3), dtype=np.int),         # [1]
+        (-(u[:, 0] * v[:, 0])).reshape(-1, 1),  # [-(u[0] * v[0])]
+        (-(u[:, 1] * v[:, 0])).reshape(-1, 1),  # [-(u[1] * v[0])]
+        (-v[:, 0]).reshape(-1, 1)), axis=1)     # [-v[0]]
+    # [[0, 0, 0], u[0], u[1], [1], -(u[0] * v[1]), -(u[1] * v[1]), -v[1]]
+    lower_half = np.concatenate((
+        np.zeros((N, 3), dtype=np.int),         # [0, 0, 0]
+        u,                                      # [u[0], u[1]]
+        np.ones((N, 1), dtype=np.int),          # [1]
+        (-(u[:, 0] * v[:, 1])).reshape(-1, 1),  # [-(u[0] * v[1])]
+        (-(u[:, 1] * v[:, 1])).reshape(-1, 1),  # [-(u[1] * v[1])]
+        (-v[:, 1]).reshape(-1, 1)), axis=1)     # [-v[1]]
+    A = np.concatenate((upper_half, lower_half), axis=0)
+
+    # A = np.array([
+    #      [u[0][0], u[0][1], 1, 0, 0, 0, -(u[0][0] * v[0][0]), -(u[0][1] * v[0][0]), -v[0][0]],
+    #      [u[1][0], u[1][1], 1, 0, 0, 0, -(u[1][0] * v[1][0]), -(u[1][1] * v[1][0]), -v[1][0]],
+    #      [u[2][0], u[2][1], 1, 0, 0, 0, -(u[2][0] * v[2][0]), -(u[2][1] * v[2][0]), -v[2][0]],
+    #      [u[3][0], u[3][1], 1, 0, 0, 0, -(u[3][0] * v[3][0]), -(u[3][1] * v[3][0]), -v[3][0]],
+    #      [0, 0, 0, u[0][0], u[0][1], 1, -(u[0][0] * v[0][1]), -(u[0][1] * v[0][1]), -v[0][1]],
+    #      [0, 0, 0, u[1][0], u[1][1], 1, -(u[1][0] * v[1][1]), -(u[1][1] * v[1][1]), -v[1][1]],
+    #      [0, 0, 0, u[2][0], u[2][1], 1, -(u[2][0] * v[2][1]), -(u[2][1] * v[2][1]), -v[2][1]],
+    #      [0, 0, 0, u[3][0], u[3][1], 1, -(u[3][0] * v[3][1]), -(u[3][1] * v[3][1]), -v[3][1]]])
 
     # TODO: 2.solve H with A
     _, _, vt = np.linalg.svd(A)
@@ -100,17 +119,17 @@ def warping(src, dst, H, ymin, ymax, xmin, xmax, direction='b'):
 
         # TODO: 6. assign to destination image with proper masking
         dst_x, dst_y = mesh_x, mesh_y
-        src_x, src_y = np.floor(trans_dst[:, 0]).astype(np.int), np.floor(trans_dst[:, 1]).astype(np.int)
-        dst[dst_y, dst_x] = src[src_y, src_x]
+        # src_x, src_y = np.floor(trans_dst[:, 0]).astype(np.int), np.floor(trans_dst[:, 1]).astype(np.int)
+        # dst[dst_y, dst_x] = src[src_y, src_x]
 
-        # x1, y1 = np.floor(trans_dst[:, 0]).astype(np.int), np.floor(trans_dst[:, 1]).astype(np.int)
-        # x2, y2 = np.clip(x1 + 1, None, w_src - 1), np.clip(y1 + 1, None, h_src - 1)
-        # weight_x, weight_y = trans_dst[:, 0] - x1, trans_dst[:, 1] - y1
+        x1, y1 = np.floor(trans_dst[:, 0]).astype(np.int), np.floor(trans_dst[:, 1]).astype(np.int)
+        x2, y2 = np.clip(x1 + 1, None, w_src - 1), np.clip(y1 + 1, None, h_src - 1)
+        weight_x, weight_y = trans_dst[:, 0] - x1, trans_dst[:, 1] - y1
 
-        # dst[dst_y, dst_x] = ((1.0 - weight_x) * (1.0 - weight_y)).reshape(-1, 1) * src[y1, x1] + \
-        #                     ((weight_x) * (1.0 - weight_y)).reshape(-1, 1) * src[y1, x2] + \
-        #                     ((1.0 - weight_x) * (weight_y)).reshape(-1, 1) * src[y2, x1] + \
-        #                     ((weight_x) * (weight_y)).reshape(-1, 1) * src[y2, x2]
+        dst[dst_y, dst_x] = ((1.0 - weight_x) * (1.0 - weight_y)).reshape(-1, 1) * src[y1, x1] + \
+                            ((weight_x) * (1.0 - weight_y)).reshape(-1, 1) * src[y1, x2] + \
+                            ((1.0 - weight_x) * (weight_y)).reshape(-1, 1) * src[y2, x1] + \
+                            ((weight_x) * (weight_y)).reshape(-1, 1) * src[y2, x2]
 
     elif direction == 'f':
         # TODO: 3.apply H to the source pixels and retrieve (u,v) pixels, then reshape to (ymax-ymin),(xmax-xmin)
