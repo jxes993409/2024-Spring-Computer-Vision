@@ -4,7 +4,7 @@ import random
 from tqdm import tqdm
 from utils import solve_homography, warping
 
-random.seed(999)
+np.random.seed(999)
 
 def panorama(imgs):
     """
@@ -39,15 +39,15 @@ def panorama(imgs):
         # Match descriptors.
         matches = bf.match(des1,des2)
         # Sort them in the order of their distance.
-        # matches = sorted(matches, key = lambda x:x.distance)
+        matches = sorted(matches, key = lambda x:x.distance)
 
         points1, points2 = kp1_array[[match.queryIdx for match in matches]], kp2_array[[match.trainIdx for match in matches]]
 
         # TODO: 2. apply RANSAC to choose best H
         probability = 0.99
         outliner_ratio = 0.5
-        sample_points = 6
-        threshold = 0.9
+        sample_points = 5
+        threshold = 4.0
         min_outliner_count = len(matches)
         N = int(np.log((1 - probability)) / np.log((1 - (1 - outliner_ratio) ** sample_points)))
 
