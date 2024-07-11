@@ -49,5 +49,5 @@ $ ./test.sh
 
     |----- method.md, requirement.txt, result.txt
 
-|----- CV24S_MediaTek.pdf, MediaTek_Supplement.pdf, processing_order.pdf, slide.pptx, readme.md
+|----- CV24S_MediaTek.pdf, MediaTek_Supplement.pdf, processing_order.pdf, slide.pptx, README.md
 ```
